@@ -11,10 +11,7 @@
 
 "use strict";
 
-const DELIVERY_OPTIONS_SELECTOR = 'div[id="Delivery options"]';
-const DELIVERY_OPTIONS_MESSAGE_SELECTOR = "div > p > span:nth-child(1) > span";
 const NOTIFICATION_SOUND_PLAYER = document.createElement("audio");
-
 NOTIFICATION_SOUND_PLAYER.src = "https://www.w3schools.com/jsref/horse.ogg";
 NOTIFICATION_SOUND_PLAYER.type = "audio/ogg";
 NOTIFICATION_SOUND_PLAYER.preload = "auto";
@@ -27,7 +24,7 @@ let checkDeliveryOption = (websiteName) => {
             return instacartWatcher();
             break;
         default:
-            console.log("Current website is not supported");
+            console.log('Website "', websiteName, '" is not supported.');
     }
 };
 
@@ -77,13 +74,15 @@ let reloadPageInSeconds = (seconds) => {
 
 let main = () => {
     checkDeliveryOption("instacart")
-    .then(() => {
-        console.log("Delivery options might be available now!");
-        NOTIFICATION_SOUND_PLAYER.play();
-    })
-    .catch(() => {
-        reloadPageInSeconds(60);
-    });
+        .then(() => {
+            console.log("Delivery options might be available now!");
+            // TODO: Chrome 66+: DOMException: play() failed because the user didn’t interact with the document first
+            NOTIFICATION_SOUND_PLAYER.play();
+        })
+        .catch(() => {
+            console.log("Delivery options are not available. Reloading page in 60 seconds.");
+            reloadPageInSeconds(60);
+        });
 }
 
 (function () {
